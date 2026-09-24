@@ -1,0 +1,76 @@
+
+====================================================================================================
+A. Cross-sectional currency strategies, 9 G10 currencies vs USD, 10% vol target
+====================================================================================================
+panel 2006-05-15 -> 2026-09-24
+Carry: long top-3 / short bottom-3 IS Sh  0.13 | OOS Sh -0.13 | CAGR  -0.78%  vol  10.8%  Sharpe -0.02  MaxDD  -46.8% | %/yr: price -1.17 carry +4.41 markup -3.26 trading  -0.18
+  carry with markup 0.0%           IS Sh  0.38 | OOS Sh  0.21 | CAGR   2.51%  vol  10.8%  Sharpe  0.28  MaxDD  -28.3% | %/yr: price -1.17 carry +4.41 markup +0.00 trading  -0.18
+  carry with markup 0.5%           IS Sh  0.25 | OOS Sh  0.04 | CAGR   0.85%  vol  10.8%  Sharpe  0.13  MaxDD  -35.5% | %/yr: price -1.17 carry +4.41 markup -1.63 trading  -0.18
+  carry with markup 2.0%           IS Sh -0.11 | OOS Sh -0.48 | CAGR  -3.96%  vol  10.8%  Sharpe -0.32  MaxDD  -68.0% | %/yr: price -1.17 carry +4.41 markup -6.52 trading  -0.18
+Momentum 21d, 3/3 monthly          IS Sh -0.08 | OOS Sh -0.75 | CAGR  -5.28%  vol  10.6%  Sharpe -0.46  MaxDD  -68.5% | %/yr: price -0.94 carry +0.30 markup -3.33 trading  -0.90
+Momentum 63d, 3/3 monthly          IS Sh -0.07 | OOS Sh -0.73 | CAGR  -5.63%  vol  11.3%  Sharpe -0.46  MaxDD  -76.1% | %/yr: price -1.73 carry +0.42 markup -3.25 trading  -0.61
+Momentum 126d, 3/3 monthly         IS Sh -0.17 | OOS Sh -0.58 | CAGR  -4.77%  vol  10.7%  Sharpe -0.40  MaxDD  -63.6% | %/yr: price -1.02 carry +0.40 markup -3.22 trading  -0.49
+Momentum 252d, 3/3 monthly         IS Sh -0.11 | OOS Sh -0.55 | CAGR  -4.48%  vol  10.9%  Sharpe -0.37  MaxDD  -60.9% | %/yr: price -0.82 carry +0.34 markup -3.14 trading  -0.37
+Reversal 5d, 3/3 weekly            IS Sh -0.33 | OOS Sh -0.41 | CAGR  -4.41%  vol  10.5%  Sharpe -0.38  MaxDD  -63.7% | %/yr: price +1.03 carry -0.23 markup -3.22 trading  -1.54
+Reversal 1d, 3/3 daily (see note)  IS Sh -0.52 | OOS Sh -1.26 | CAGR  -9.82%  vol  10.4%  Sharpe -0.94  MaxDD  -88.6% | %/yr: price +8.21 carry -0.08 markup -3.24 trading -14.68
+Value proxy (-5y return), monthly  IS Sh -0.14 | OOS Sh -0.48 | CAGR  -3.89%  vol   9.6%  Sharpe -0.36  MaxDD  -58.2% | %/yr: price -0.21 carry -0.02 markup -3.04 trading  -0.23
+TSMOM 12m per currency vs USD      IS Sh -0.28 | OOS Sh -0.21 | CAGR  -1.62%  vol   6.1%  Sharpe -0.24  MaxDD  -33.2% | %/yr: price -0.39 carry +0.15 markup -1.13 trading  -0.07
+Dollar carry                       IS Sh -0.69 | OOS Sh  0.08 | CAGR  -3.06%  vol  10.4%  Sharpe -0.25  MaxDD  -56.9% | %/yr: price -2.58 carry +1.61 markup -1.53 trading  -0.07
+Combo carry+momentum+value         IS Sh -0.02 | OOS Sh -0.86 | CAGR  -3.08%  vol   5.9%  Sharpe -0.50  MaxDD  -55.6%
+Note: the 1-day reversal's large gross 'price' profit is an artefact of Yahoo's non-synchronous
+daily closes; with synchronous hourly data (scan_intraday_fx.py) it shrinks to ~1bp/day.
+
+====================================================================================================
+B. Single-pair daily strategies on 30 G10 pairs + 4 EM pairs (Sharpe on notional)
+====================================================================================================
+        carry_trend_IS  carry_trend_OOS  zscore_IS  zscore_OOS  rev2d_IS  rev2d_OOS
+pair                                                                               
+EURUSD           -0.16             0.10      -0.04       -0.19      0.45      -0.16
+GBPUSD           -0.23            -0.02      -0.31        0.21     -0.16       0.09
+USDJPY           -0.43             0.10       0.64       -0.25      0.23       0.09
+USDCHF           -0.17            -0.28       0.02        0.26     -0.00      -0.02
+USDCAD           -0.08            -0.27       0.12       -0.51     -0.42      -0.08
+AUDUSD            0.38            -0.21      -0.56        0.36     -0.22       0.06
+NZDUSD            0.19            -0.54       0.21        0.06     -0.45      -0.20
+USDNOK           -0.19            -0.14      -0.04       -0.11     -0.02      -0.14
+USDSEK           -0.34             0.03       0.02        0.24      0.37      -0.31
+EURGBP           -0.53            -0.41      -0.14        0.06      0.25      -0.22
+EURJPY           -0.13             0.28      -0.34        0.40      0.29       0.05
+GBPJPY            0.22             0.16      -0.19        0.03     -0.08      -0.12
+EURCHF           -0.40            -0.33      -0.10        0.12      0.14      -0.06
+AUDJPY            0.16             0.09      -0.23       -0.04     -0.30      -0.16
+EURAUD            0.28            -0.09      -0.16       -0.01     -0.34       0.05
+EURCAD           -0.28            -0.15       0.00        0.14     -0.15       0.14
+GBPCHF           -0.23            -0.45       0.23        0.40      0.20      -0.09
+AUDNZD           -0.41            -0.17      -0.50       -0.38     -0.17      -0.52
+AUDCAD            0.16            -0.10       0.12        0.74      0.43       0.20
+CADJPY            0.24            -0.00       0.18        0.04     -0.41      -0.24
+NZDJPY            0.34            -0.26       0.03       -0.35     -0.34      -0.02
+GBPAUD            0.10             0.20      -0.11       -0.51      0.01       0.32
+CHFJPY           -0.17             0.20       0.15        0.31      0.17       0.28
+EURNZD            0.25            -0.29       0.20       -0.53     -0.14       0.08
+GBPCAD           -0.48            -0.15      -0.12        0.06     -0.18       0.11
+AUDCHF           -0.10            -0.38       0.09        0.18      0.04       0.02
+CADCHF           -0.01            -0.49      -0.04        0.32     -0.10      -0.12
+NZDCAD            0.14            -0.70      -0.44       -0.05     -0.20       0.06
+GBPNZD            0.10            -0.20      -0.06       -0.34     -0.15       0.21
+NZDCHF            0.24            -0.53       0.14       -0.29      0.00       0.01
+USDMXN           -0.35            -0.08        NaN         NaN       NaN        NaN
+USDZAR           -0.05            -0.41        NaN         NaN       NaN        NaN
+USDPLN           -0.44            -0.05        NaN         NaN       NaN        NaN
+USDHUF           -0.13             0.14        NaN         NaN       NaN        NaN
+carry_trend : positive IS 13, positive OOS 9, Sharpe > 0.3 in BOTH halves: 0 of 34
+zscore      : positive IS 13, positive OOS 17, Sharpe > 0.3 in BOTH halves: 0 of 30
+rev2d       : positive IS 11, positive OOS 15, Sharpe > 0.3 in BOTH halves: 0 of 30
+carry+trend G10 portfolio    IS Sh -0.08 | OOS Sh -0.45 | CAGR  -0.69%  vol   2.6%  Sharpe -0.26  MaxDD  -19.6%
+carry+trend EM portfolio     IS Sh -0.42 | OOS Sh -0.11 | CAGR  -1.24%  vol   4.6%  Sharpe -0.25  MaxDD  -31.3%
+
+====================================================================================================
+C. Calendar and flow effects (USD vs 6-currency basket, bp)
+====================================================================================================
+Month-end equity-rebalancing flow 2001-2014: -1.6 bp/month, t=-0.38, n=104
+  day-of-week 2001-2014: M:-2.1(t=-0.8) T:+2.2(t=+0.9) W:+4.1(t=+1.7) T:-3.4(t=-1.4) F:+0.7(t=+0.2)
+  turn-of-month (first 2 days) 2001-2014: -1.38 bp vs other days +0.44 bp
+Month-end equity-rebalancing flow 2015-2026: +3.5 bp/month, t=+1.12, n=141
+  day-of-week 2015-2026: M:-2.3(t=-1.1) T:-1.1(t=-0.8) W:+1.2(t=+0.8) T:+0.3(t=+0.2) F:+2.0(t=+0.6)
+  turn-of-month (first 2 days) 2015-2026: +1.45 bp vs other days -0.45 bp
