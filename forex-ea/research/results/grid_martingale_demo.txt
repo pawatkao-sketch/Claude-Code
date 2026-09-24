@@ -1,0 +1,5 @@
+Accounts started: 117
+Blown up within 12 months: 99 (85%)
+Survivors: median end balance $4403, worst intra-year drawdown among survivors -82%
+Basket win rate before ruin: 100.0% (every closed basket is a 'win' - losses only appear as a blow-up)
+Average ending balance across ALL starts (incl. blow-ups): $787 from $1000

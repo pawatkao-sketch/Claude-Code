@@ -3,9 +3,21 @@
 This folder contains:
 
 - **`MQL5/Experts/HonestEdge.mq5`**: the EA.
-- **`research/`**: two Python scripts that test the EA's rules on 26 years of daily data. You can re-run them yourself.
+- **`MQL5/Scripts/SwapAudit.mq5`**: measures XM's real overnight-swap markup on your account.
+- **`RESEARCH.md`**: round 2, the wide search for a better forex strategy (36 strategy families, 37 pairs, gold and silver).
+- **`research/`**: Python scripts behind every number, with saved outputs in `research/results/`. You can re-run them yourself.
 
 You asked for brutal honesty, so the verdict comes first.
+
+> **Round 2 update: searching wider for a better forex strategy.**
+>
+> - **Scope:** 36 strategy families and about 200 variants across 37 currency pairs, gold and silver. Data: 26 years daily, 23 years hourly.
+> - **Tested:** carry, momentum, value, mean reversion, calendar and flow effects, session breakouts, the "night scalper", machine learning and grid/martingale.
+> - **Result: none of them reliably makes money on a forex pair after XM's costs.**
+> - **Best signal:** a gold (XAUUSD) intraday volatility breakout. It passed two untouched holdout periods before costs. After costs since 2016, it's about +$6 a year on $1,000.
+> - **The EA:** that signal is now Module C, **off by default, for demo testing only**. Module A (the US500 dip-buy) is still the best thing in this EA.
+>
+> Full details and all the traps that create fake edges are in [RESEARCH.md](RESEARCH.md).
 
 ---
 
@@ -95,6 +107,13 @@ python3 research/backtest_pullback.py ./data
 
 **Module B: slow trend (OFF).** 200-bar Donchian breakout, long or short, with a 5×ATR initial stop. The stop trails to the opposite 100-bar channel. Its evidence is weak, and it is included only so you can test it yourself.
 
+**Module C: gold intraday breakout (OFF, demo only).** Runs on `GOLD` (XAUUSD).
+
+- **Entry:** each server day it places a buy-stop at the day's open + 0.8 × yesterday's range and a sell-stop at the open − 0.8 × range. The first fill cancels the other.
+- **Stop:** 2 × 0.8 × range from the entry.
+- **Exit:** everything is closed by 23:00 server time (21:00 London), before the rollover, so it never pays swap. At most one trade a day.
+- **Why it's off:** before costs, this was the most robust signal in round 2. After costs it's roughly break-even (see RESEARCH.md section 5). It's here so you can measure real XM fills and costs on a demo account, not to earn money.
+
 **Risk manager.** This is the part that actually protects you:
 
 | Guard | What it prevents |
@@ -120,7 +139,10 @@ python3 research/backtest_pullback.py ./data
 2. **Symbol names differ by account.** Open Market Watch → Show All.
    - Use the exact names in `InpPullbackSymbols` and `InpTrendSymbols`, and set `InpSymbolSuffix` if your account adds one (for example `micro`).
    - I have not verified XM's current names. `US500Cash`, `GER40Cash`, `JP225Cash` and `GOLD` are XM's usual style.
-3. **Install.** Copy `HonestEdge.mq5` to `MQL5/Experts/`, open it in MetaEditor, and press **F7** to compile. If it fails, paste the errors back to me. Then attach it to **one** D1 chart. It trades all listed symbols from that one chart, and "Algo Trading" must be enabled.
+3. **Install.**
+   1. Copy `HonestEdge.mq5` to `MQL5/Experts/` and `SwapAudit.mq5` to `MQL5/Scripts/`.
+   2. Open each in MetaEditor and press **F7** to compile. If either fails, paste the errors back to me.
+   3. Attach the EA to **one** D1 chart. It trades all listed symbols from that one chart, including `InpGbSymbols` for Module C. "Algo Trading" must be enabled.
 4. **Keep it running.** Daily-bar logic doesn't need a VPS, but the terminal must be running around the daily open. XM offers a free VPS above certain balances and volumes. At $1,000 you probably won't qualify, and a paid VPS (about $10–30 a month) would eat all of the expected profit. **Run it on a PC you leave on, or don't bother.**
 
 ---
@@ -137,6 +159,13 @@ Do these in order. Stop at the first failure.
    - If out-of-sample performance falls by more than half, you fitted noise.
 4. **Demo-trade it for at least 3 months.** Compare every demo fill with what the tester would have done. The gap between them is your real-world friction.
 5. **Go live only if all of this holds:** demo profit factor above 1.2, no execution problems, and you accept that the expected gain is about $15 a year.
+6. **Module C (gold), if you try it:**
+   - Demo only.
+   - Test with "Every tick based on real ticks". Don't use "Open prices only": it fills stop orders unrealistically.
+   - After a few months, compare the average demo trade with XM's gold spread. If the average trade isn't clearly larger than the round-trip cost, it has no edge at your broker.
+7. **Run `SwapAudit.mq5`** (MT5 → Navigator → Scripts, drag it onto any chart).
+   - It prints each symbol's long and short swap as a yearly % and the broker's implied markup.
+   - The research assumed about 1% a year per side. If your numbers are higher, every strategy that holds positions overnight is worse than shown here.
 
 **Stop it for good** if any of these happen: the kill switch trips; 25 live trades show a profit factor below 1.0; or XM changes US500 swap or spread terms materially.
 

@@ -1,0 +1,9 @@
+Out-of-sample rank IC by year (0 = no skill):
+2013:+0.028 2014:+0.031 2015:+0.043 2016:+0.048 2017:+0.006 2018:+0.019 2019:-0.008 2020:-0.001 2021:+0.002 2022:+0.005 2023:+0.009 2024:-0.022 2025:-0.006 2026:-0.002
+Pooled OOS IC +0.0115, sign hit-rate 0.5024, n=74494
+trade if |pred| > 0x cost, XM Standard : trades  74494, net -2.21 pips/trade, t=-21.12, years positive 0/14
+trade if |pred| > 0x cost, XM Ultra Low: trades  74494, net -1.31 pips/trade, t=-12.52, years positive 0/14
+trade if |pred| > 1x cost, XM Standard : trades  15414, net -1.70 pips/trade, t=-6.16, years positive 0/14
+trade if |pred| > 1x cost, XM Ultra Low: trades  28958, net -1.06 pips/trade, t=-5.64, years positive 1/14
+trade if |pred| > 2x cost, XM Standard : trades   3136, net -2.12 pips/trade, t=-2.83, years positive 2/14
+trade if |pred| > 2x cost, XM Ultra Low: trades  10810, net -0.85 pips/trade, t=-2.48, years positive 3/14

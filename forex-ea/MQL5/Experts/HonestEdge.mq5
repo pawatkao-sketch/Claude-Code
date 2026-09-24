@@ -7,18 +7,24 @@
 //|   on a close above the 5-day SMA or after 10 bars; 3*ATR stop.   |
 //| Module B (OFF by default): slow Donchian trend (200/100 bars),   |
 //|   5*ATR initial stop, trailing opposite channel. Weak evidence.  |
+//| Module C (OFF by default, DEMO ONLY): gold intraday volatility   |
+//|   breakout. Stop orders at today's open +/- 0.8 x yesterday's    |
+//|   range, one-cancels-other, 2x stop, flat before the rollover.   |
+//|   Passed out-of-sample tests BEFORE costs; roughly break-even    |
+//|   after XM costs since 2010. See forex-ea/RESEARCH.md.           |
 //|                                                                  |
 //| Read forex-ea/README.md before running this on real money.       |
 //+------------------------------------------------------------------+
 #property copyright   "HonestEdge"
-#property version     "1.00"
-#property description "A: US index pullback (RSI2 dip-buy). B: slow Donchian trend (off by default)."
+#property version     "1.10"
+#property description "A: US index pullback (RSI2 dip-buy). B: slow Donchian trend (off). C: gold intraday breakout (off, demo only)."
 #property description "Risk manager: min-lot feasibility check, open-risk cap, spread filter, drawdown kill switch."
 
 #include <Trade\Trade.mqh>
 
 #define HE_PULLBACK 0
 #define HE_TREND    1
+#define HE_GOLDBO   2
 
 //--- inputs ---------------------------------------------------------
 input group "=== Symbols (use the exact names in your XM Market Watch) ==="
@@ -26,7 +32,7 @@ input string          InpPullbackSymbols = "US500Cash";
 input string          InpTrendSymbols    = "EURUSD,USDJPY,AUDUSD,GOLD,US500Cash,GER40Cash,JP225Cash";
 input string          InpSymbolSuffix    = "";          // e.g. "micro" or "#" depending on account type
 input ENUM_TIMEFRAMES InpTimeframe       = PERIOD_D1;   // research was done on D1 only
-input long            InpMagicBase       = 26092400;    // module A = base, module B = base+1
+input long            InpMagicBase       = 26092400;    // module A = base, B = base+1, C = base+2
 
 input group "=== Module A: index pullback ==="
 input bool   InpUsePullback  = true;
@@ -44,6 +50,14 @@ input double InpTrRiskPct    = 0.5;
 input int    InpTrEntryBars  = 200;
 input int    InpTrExitBars   = 100;
 input double InpTrStopAtr    = 5.0;
+
+input group "=== Module C: gold intraday breakout (break-even after costs - DEMO ONLY) ==="
+input bool   InpUseGoldBreakout = false;
+input string InpGbSymbols       = "GOLD";   // XM's name for XAUUSD; check Market Watch
+input double InpGbRiskPct       = 0.5;      // % of equity lost if the protective stop is hit
+input double InpGbK             = 0.8;      // trigger = today's open +/- K x yesterday's D1 range
+input double InpGbStopMult      = 2.0;      // stop = StopMult x K x range from the trigger
+input int    InpGbExitHour      = 23;       // server hour to flatten (XM 23:00 = 21:00 London, before rollover)
 
 input group "=== Risk manager ==="
 input int    InpAtrPeriod          = 20;
@@ -77,6 +91,7 @@ struct SMarket
    datetime nextTry;          // throttles retries after a failed order
    bool     waitLogged;
    bool     reported;         // feasibility report printed
+   datetime gbDay;            // module C: D1 bar whose orders were already handled
 };
 
 SMarket g_mk[];
@@ -89,7 +104,8 @@ string  g_gvPeak, g_gvHalt;
 //+------------------------------------------------------------------+
 int OnInit()
 {
-   if(InpPbRiskPct <= 0 || InpPbRiskPct > 3.0 || InpTrRiskPct <= 0 || InpTrRiskPct > 3.0)
+   if(InpPbRiskPct <= 0 || InpPbRiskPct > 3.0 || InpTrRiskPct <= 0 || InpTrRiskPct > 3.0 ||
+      InpGbRiskPct <= 0 || InpGbRiskPct > 3.0)
    {
       Print("HonestEdge: risk per trade must be >0 and <=3%. Above that a normal losing streak can gut a small account.");
       return INIT_PARAMETERS_INCORRECT;
@@ -104,6 +120,16 @@ int OnInit()
    ArrayResize(g_mk, 0);
    if(InpUsePullback && !AddMarkets(InpPullbackSymbols, HE_PULLBACK)) return INIT_FAILED;
    if(InpUseTrend    && !AddMarkets(InpTrendSymbols,    HE_TREND))    return INIT_FAILED;
+   if(InpUseGoldBreakout)
+   {
+      if(InpGbK <= 0 || InpGbStopMult <= 0 || InpGbExitHour < 1 || InpGbExitHour > 23)
+      {
+         Print("HonestEdge: module C needs K > 0, StopMult > 0 and an exit hour between 1 and 23.");
+         return INIT_PARAMETERS_INCORRECT;
+      }
+      Print("HonestEdge: module C (gold breakout) is ON. Research says it is roughly break-even after XM costs - use a DEMO account.");
+      if(!AddMarkets(InpGbSymbols, HE_GOLDBO)) return INIT_FAILED;
+   }
    if(ArraySize(g_mk) == 0)
    {
       Print("HonestEdge: no tradable symbols. Check the symbol names/suffix against Market Watch.");
@@ -127,6 +153,8 @@ void OnDeinit(const int reason)
    EventKillTimer();
    for(int i = 0; i < ArraySize(g_mk); i++)
    {
+      // module C must never leave unattended stop orders behind (they are re-placed on restart)
+      if(g_mk[i].module == HE_GOLDBO) DeletePendings(g_mk[i]);
       if(g_mk[i].hAtr      != INVALID_HANDLE) IndicatorRelease(g_mk[i].hAtr);
       if(g_mk[i].hRsi      != INVALID_HANDLE) IndicatorRelease(g_mk[i].hRsi);
       if(g_mk[i].hSmaTrend != INVALID_HANDLE) IndicatorRelease(g_mk[i].hSmaTrend);
@@ -173,7 +201,7 @@ bool AddMarkets(const string list, const int module)
       g_mk[k].symbol          = s;
       g_mk[k].module          = module;
       g_mk[k].magic           = InpMagicBase + module;
-      g_mk[k].hAtr            = iATR(s, InpTimeframe, InpAtrPeriod);
+      g_mk[k].hAtr            = iATR(s, module == HE_GOLDBO ? PERIOD_D1 : InpTimeframe, InpAtrPeriod);
       g_mk[k].hRsi            = INVALID_HANDLE;
       g_mk[k].hSmaTrend       = INVALID_HANDLE;
       g_mk[k].hSmaExit        = INVALID_HANDLE;
@@ -187,6 +215,7 @@ bool AddMarkets(const string list, const int module)
       g_mk[k].nextTry         = 0;
       g_mk[k].waitLogged      = false;
       g_mk[k].reported        = false;
+      g_mk[k].gbDay           = 0;
       if(module == HE_PULLBACK)
       {
          g_mk[k].hRsi      = iRSI(s, InpTimeframe, InpPbRsiPeriod, PRICE_CLOSE);
@@ -210,6 +239,11 @@ bool AddMarkets(const string list, const int module)
 //+------------------------------------------------------------------+
 void ProcessMarket(SMarket &m)
 {
+   if(m.module == HE_GOLDBO)
+   {
+      GoldBreakout(m);
+      return;
+   }
    datetime bar0 = iTime(m.symbol, InpTimeframe, 0);
    if(bar0 == 0) return;                        // history not loaded yet
    if(bar0 != m.lastBar && OnNewBar(m, bar0))   // retried until the data is ready
@@ -458,6 +492,213 @@ void ClosePosition(SMarket &m, const ulong ticket, const string why)
 }
 
 //+------------------------------------------------------------------+
+//| Module C: gold intraday volatility breakout.                     |
+//| Once per server day: a buy-stop at open + K*range and a sell-stop|
+//| at open - K*range (range = yesterday's D1 high-low), each with a |
+//| protective stop StopMult*K*range away. The first fill cancels the|
+//| other order. Everything is flat by InpGbExitHour, so no swap.    |
+//+------------------------------------------------------------------+
+void GoldBreakout(SMarket &m)
+{
+   datetime now = TimeCurrent();
+   datetime d1  = iTime(m.symbol, PERIOD_D1, 0);
+   if(d1 == 0) return;
+   datetime exitTime = d1 + InpGbExitHour * 3600;
+
+   // one-cancels-other: once a position exists, remove the remaining stop order
+   int nPos = CountPositions(m.symbol, m.magic);
+   if(nPos > 0) DeletePendings(m);
+   if(nPos > 1)
+   {
+      // both sides filled in a whipsaw: flat for the day (the backtest skips such days too)
+      CloseAllFor(m, "both orders filled");
+      m.gbDay = d1;
+      return;
+   }
+   ulong pos = FindPosition(m.symbol, m.magic);
+
+   if(pos > 0 && PositionSelectByTicket(pos) && (datetime)PositionGetInteger(POSITION_TIME) < d1)
+   {
+      if(now >= m.nextTry) ClosePosition(m, pos, "left over from a previous day");   // terminal was off at exit time
+      return;
+   }
+   DeleteStalePendings(m, d1);                  // yesterday's levels must never trigger today
+   if(now >= exitTime || g_halted)
+   {
+      DeletePendings(m);
+      if(pos > 0 && now >= exitTime && now >= m.nextTry) ClosePosition(m, pos, "end of day, flat before rollover");
+      return;
+   }
+   if(pos > 0)
+   {
+      m.gbDay = d1;
+      return;
+   }
+   if(m.gbDay == d1 || now < m.nextTry) return;
+   if(HasPendings(m))                    { m.gbDay = d1; return; }
+   if(TradedToday(m, d1))                { m.gbDay = d1; return; }   // e.g. after a restart
+   if(!g_hedging && PositionSelect(m.symbol)) { m.gbDay = d1; return; } // netting: symbol already in use
+   if(!TradingAllowed(m.symbol, +1) || !TradingAllowed(m.symbol, -1)) return;
+
+   double hi1 = iHigh(m.symbol, PERIOD_D1, 1), lo1 = iLow(m.symbol, PERIOD_D1, 1);
+   double open0 = iOpen(m.symbol, PERIOD_D1, 0);
+   double atr;
+   if(hi1 <= 0 || lo1 <= 0 || open0 <= 0 || hi1 <= lo1) return;
+   if(!GetBuf(m.hAtr, 0, 1, atr) || atr <= 0) return;
+   if(!m.reported) ReportFeasibility(m, atr);
+
+   double rng      = hi1 - lo1;
+   int    digits   = (int)SymbolInfoInteger(m.symbol, SYMBOL_DIGITS);
+   double point    = SymbolInfoDouble(m.symbol, SYMBOL_POINT);
+   double up       = NormalizeDouble(open0 + InpGbK * rng, digits);
+   double dn       = NormalizeDouble(open0 - InpGbK * rng, digits);
+   double stopDist = InpGbStopMult * InpGbK * rng;
+   double slB      = NormalizeDouble(up - stopDist, digits);
+   double slS      = NormalizeDouble(dn + stopDist, digits);
+
+   MqlTick tk;
+   if(!SymbolInfoTick(m.symbol, tk) || tk.bid <= 0) return;
+   if(tk.ask - tk.bid > InpMaxSpreadAtrFrac * atr) return;          // wait for a normal spread
+   if(tk.ask >= up || tk.bid <= dn)
+   {
+      PrintFormat("HonestEdge: %s broke out before the orders could be placed - no trade today.", m.symbol);
+      m.gbDay = d1;
+      return;
+   }
+   double minGap = (SymbolInfoInteger(m.symbol, SYMBOL_TRADE_STOPS_LEVEL) +
+                    SymbolInfoInteger(m.symbol, SYMBOL_TRADE_FREEZE_LEVEL)) * point;
+   if(up - tk.ask <= minGap || tk.bid - dn <= minGap) return;       // too close to place; retry
+
+   double equity    = AccountInfoDouble(ACCOUNT_EQUITY);
+   double riskMoney = equity * InpGbRiskPct / 100.0;
+   double lotsB, riskB, lotsS, riskS;
+   if(!SizePosition(m.symbol, +1, up, slB, riskMoney, lotsB, riskB) ||
+      !SizePosition(m.symbol, -1, dn, slS, riskMoney, lotsS, riskS))
+   {
+      m.gbDay = d1;
+      return;
+   }
+   if(OpenRiskMoney() + MathMax(riskB, riskS) > equity * InpMaxOpenRiskPct / 100.0)
+   {
+      PrintFormat("HonestEdge: %s skipped today - it would exceed the %.1f%% open-risk cap.", m.symbol, InpMaxOpenRiskPct);
+      m.gbDay = d1;
+      return;
+   }
+   double marginB = 0, marginS = 0, freeM = AccountInfoDouble(ACCOUNT_MARGIN_FREE) * InpMaxMarginUsePct / 100.0;
+   if(!OrderCalcMargin(ORDER_TYPE_BUY, m.symbol, lotsB, up, marginB) || marginB > freeM ||
+      !OrderCalcMargin(ORDER_TYPE_SELL, m.symbol, lotsS, dn, marginS) || marginS > freeM)
+   {
+      PrintFormat("HonestEdge: %s skipped today - not enough free margin.", m.symbol);
+      m.gbDay = d1;
+      return;
+   }
+
+   ENUM_ORDER_TYPE_TIME ttype = ORDER_TIME_GTC;
+   datetime expiry = 0;
+   long expModes = SymbolInfoInteger(m.symbol, SYMBOL_EXPIRATION_MODE);
+   if((expModes & SYMBOL_EXPIRATION_SPECIFIED) == SYMBOL_EXPIRATION_SPECIFIED)
+   {
+      ttype  = ORDER_TIME_SPECIFIED;   // the broker also cancels them if this EA is not running
+      expiry = exitTime;
+   }
+
+   g_trade.SetExpertMagicNumber(m.magic);
+   g_trade.SetTypeFilling(Filling(m.symbol));
+   bool okB = g_trade.BuyStop(lotsB, up, m.symbol, slB, 0, ttype, expiry, "HE goldbo");
+   uint rcB = g_trade.ResultRetcode();
+   bool okS = okB && g_trade.SellStop(lotsS, dn, m.symbol, slS, 0, ttype, expiry, "HE goldbo");
+   uint rcS = g_trade.ResultRetcode();
+   if(okB && okS)
+   {
+      PrintFormat("HonestEdge: %s orders placed: buy-stop %.2f @ %s (SL %s), sell-stop %.2f @ %s (SL %s), risk %.2f each.",
+                  m.symbol, lotsB, DoubleToString(up, digits), DoubleToString(slB, digits),
+                  lotsS, DoubleToString(dn, digits), DoubleToString(slS, digits), MathMax(riskB, riskS));
+      m.gbDay = d1;
+      return;
+   }
+   DeletePendings(m);                           // never leave a one-sided order behind
+   uint rc = okB ? rcS : rcB;
+   if(IsTransient(rc))
+      m.nextTry = now + 60;
+   else
+   {
+      PrintFormat("HonestEdge: %s stop orders rejected (retcode %u) - no trade today.", m.symbol, rc);
+      m.gbDay = d1;
+   }
+}
+
+int CountPositions(const string sym, const long magic)
+{
+   int n = 0;
+   for(int i = PositionsTotal() - 1; i >= 0; i--)
+   {
+      ulong t = PositionGetTicket(i);
+      if(t != 0 && PositionGetString(POSITION_SYMBOL) == sym && PositionGetInteger(POSITION_MAGIC) == magic)
+         n++;
+   }
+   return n;
+}
+
+void CloseAllFor(SMarket &m, const string why)
+{
+   for(int i = PositionsTotal() - 1; i >= 0; i--)
+   {
+      ulong t = PositionGetTicket(i);
+      if(t != 0 && PositionGetString(POSITION_SYMBOL) == m.symbol && PositionGetInteger(POSITION_MAGIC) == m.magic)
+         ClosePosition(m, t, why);
+   }
+}
+
+bool HasPendings(SMarket &m)
+{
+   for(int i = OrdersTotal() - 1; i >= 0; i--)
+   {
+      ulong t = OrderGetTicket(i);
+      if(t != 0 && OrderGetString(ORDER_SYMBOL) == m.symbol && OrderGetInteger(ORDER_MAGIC) == m.magic)
+         return true;
+   }
+   return false;
+}
+
+void DeletePendings(SMarket &m)
+{
+   for(int i = OrdersTotal() - 1; i >= 0; i--)
+   {
+      ulong t = OrderGetTicket(i);
+      if(t == 0 || OrderGetString(ORDER_SYMBOL) != m.symbol || OrderGetInteger(ORDER_MAGIC) != m.magic)
+         continue;
+      if(!g_trade.OrderDelete(t))
+         PrintFormat("HonestEdge: %s could not delete order %I64u (retcode %u), will retry.", m.symbol, t, g_trade.ResultRetcode());
+   }
+}
+
+void DeleteStalePendings(SMarket &m, const datetime dayStart)
+{
+   for(int i = OrdersTotal() - 1; i >= 0; i--)
+   {
+      ulong t = OrderGetTicket(i);
+      if(t == 0 || OrderGetString(ORDER_SYMBOL) != m.symbol || OrderGetInteger(ORDER_MAGIC) != m.magic)
+         continue;
+      if((datetime)OrderGetInteger(ORDER_TIME_SETUP) < dayStart && !g_trade.OrderDelete(t))
+         PrintFormat("HonestEdge: %s could not delete stale order %I64u (retcode %u).", m.symbol, t, g_trade.ResultRetcode());
+   }
+}
+
+bool TradedToday(SMarket &m, const datetime dayStart)
+{
+   if(!HistorySelect(dayStart, TimeCurrent() + 60)) return false;
+   for(int i = HistoryDealsTotal() - 1; i >= 0; i--)
+   {
+      ulong d = HistoryDealGetTicket(i);
+      if(d != 0 && HistoryDealGetString(d, DEAL_SYMBOL) == m.symbol &&
+         HistoryDealGetInteger(d, DEAL_MAGIC) == m.magic &&
+         HistoryDealGetInteger(d, DEAL_ENTRY) == DEAL_ENTRY_IN)
+         return true;
+   }
+   return false;
+}
+
+//+------------------------------------------------------------------+
 //| Position size from money-at-risk. Refuses the trade when the     |
 //| broker's minimum lot would risk far more than intended - the     |
 //| single most common way small accounts get blown up.              |
@@ -519,7 +760,8 @@ double OpenRiskMoney()
       ulong t = PositionGetTicket(i);
       if(t == 0) continue;
       long magic = PositionGetInteger(POSITION_MAGIC);
-      if(magic != InpMagicBase + HE_PULLBACK && magic != InpMagicBase + HE_TREND) continue;
+      if(magic != InpMagicBase + HE_PULLBACK && magic != InpMagicBase + HE_TREND &&
+         magic != InpMagicBase + HE_GOLDBO) continue;
       string sym = PositionGetString(POSITION_SYMBOL);
       double sl  = PositionGetDouble(POSITION_SL);
       double vol = PositionGetDouble(POSITION_VOLUME);
@@ -537,8 +779,10 @@ double OpenRiskMoney()
 void ReportFeasibility(SMarket &m, const double atr)
 {
    m.reported = true;
-   double stopMult = m.module == HE_PULLBACK ? InpPbStopAtr : InpTrStopAtr;
-   double riskPct  = m.module == HE_PULLBACK ? InpPbRiskPct : InpTrRiskPct;
+   // module C's stop is StopMult*K*range; a daily ATR is a fair stand-in for the range here
+   double stopMult = m.module == HE_PULLBACK ? InpPbStopAtr : (m.module == HE_TREND ? InpTrStopAtr : InpGbStopMult * InpGbK);
+   double riskPct  = m.module == HE_PULLBACK ? InpPbRiskPct : (m.module == HE_TREND ? InpTrRiskPct : InpGbRiskPct);
+   string name     = m.module == HE_PULLBACK ? "pullback" : (m.module == HE_TREND ? "trend" : "gold breakout");
    double price    = SymbolInfoDouble(m.symbol, SYMBOL_BID);
    if(price <= 0) { m.reported = false; return; }
    double loss   = LossPerLot(m.symbol, +1, price, price - stopMult * atr);
@@ -547,7 +791,7 @@ void ReportFeasibility(SMarket &m, const double atr)
    if(loss <= 0 || equity <= 0) return;
    double minPct = vmin * loss / equity * 100.0;
    PrintFormat("HonestEdge: feasibility %s [%s]: min lot %.2f risks %.2f%% of equity on a %.1f*ATR stop; target %.2f%% -> %s",
-               m.symbol, m.module == HE_PULLBACK ? "pullback" : "trend", vmin, minPct, stopMult, riskPct,
+               m.symbol, name, vmin, minPct, stopMult, riskPct,
                minPct <= riskPct * InpMinLotTolerance ? "OK" : "TOO SMALL - every signal will be skipped");
 }
 
@@ -602,6 +846,7 @@ void CloseAll()
 {
    for(int i = 0; i < ArraySize(g_mk); i++)
    {
+      if(g_mk[i].module == HE_GOLDBO) DeletePendings(g_mk[i]);
       ulong t = FindPosition(g_mk[i].symbol, g_mk[i].magic);
       if(t > 0) ClosePosition(g_mk[i], t, "kill switch");
    }
@@ -662,7 +907,7 @@ void DrawStatus()
 {
    if(MQLInfoInteger(MQL_TESTER) && !MQLInfoInteger(MQL_VISUAL_MODE)) return;
    double eq = AccountInfoDouble(ACCOUNT_EQUITY);
-   string s = StringFormat("HonestEdge v1.00  |  %s\nEquity %.2f  Peak %.2f  DD %.1f%% (kill at %.1f%%)\nOpen risk %.2f (cap %.1f%%)  Markets %d",
+   string s = StringFormat("HonestEdge v1.10  |  %s\nEquity %.2f  Peak %.2f  DD %.1f%% (kill at %.1f%%)\nOpen risk %.2f (cap %.1f%%)  Markets %d",
                            g_halted ? "HALTED - kill switch tripped" : "running",
                            eq, g_peak, g_peak > 0 ? (1.0 - eq / g_peak) * 100.0 : 0.0, InpMaxDrawdownPct,
                            OpenRiskMoney(), InpMaxOpenRiskPct, ArraySize(g_mk));
