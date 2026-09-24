@@ -9,6 +9,7 @@
 
 1. [Who MCC Is: Identity in One Page](#1-who-mcc-is-identity-in-one-page)
 2. [How the Club Is Structured](#2-how-the-club-is-structured)
+   - [2A. Social Media Audit](#2a-social-media-audit-checked-september-2026)
 3. [The MCC Voice: Four Registers](#3-the-mcc-voice-four-registers)
 4. [Tone Principles](#4-tone-principles)
 5. [Word Bank: Use / Avoid](#5-word-bank-use--avoid)
@@ -29,12 +30,14 @@ Templates for emails, posts, and articles are in [`MCC_Templates.md`](./MCC_Temp
 |---|---|---|
 | **Founded** | 2018 | "Since 2018" works as a credibility marker in sponsor and partner outreach. |
 | **Positioning** | "The largest business consultancy-based club" at MUIC; "a college-level consultancy-based club which aims to make successful stories through competing and organizing case competitions." | MCC is a **consultancy**, not just a social club. Write the way a firm writes: precise, outcome-oriented, and client-aware. |
-| **Vision** | "To become a world-renowned, student-led organization of professional youths." | Keep the ambition high, but never let it read as unprofessional. *Student-led* and *professional* are meant to sit together. |
-| **Mission** | 1. "Develop leadership skills through projects & competitions." 2. "Create success stories by winning and organizing business case competitions." | Two jobs: **compete** (win) and **organize** (host). Every piece of content supports one or both. |
+| **Vision** | LinkedIn: "To become a world-renowned, student-led organization of professional youths." YouTube: "To become a nationally-known and world-renowned business case consulting club that raises business leaders." | Keep the ambition high, but never let it read as unprofessional. *Student-led* and *professional* are meant to sit together. |
+| **Mission** | LinkedIn: 1. "Develop leadership skills through projects & competitions." 2. "Create success stories by winning and organizing business case competitions." YouTube adds: "To develop a business mindset in every MCC member creating a generation of MUIC students that can go into society to become leaders and problem-solvers for the business world." | Two jobs: **compete** (win) and **organize** (host). Every piece of content supports one or both. The LinkedIn wording is the newer, tighter version, so treat it as the default. |
 | **Values** | **Bright · Respectful · Supportive** | *Bright*: sharp, rigorous thinking. *Respectful*: courteous to judges, sponsors, and rivals. *Supportive*: credit teammates, volunteers, and other finalists. |
 | **Slogans** | "Train. Gain. Compete. Network." and "Home of Leading Minds" (announced Sep 9, 2022, to express **Interdisciplinarity**) | "Train. Gain. Compete. Network." describes the member journey. "Home of Leading Minds" describes the club's identity, and `#homeofleadingminds` is the signature hashtag. |
 | **Membership** | 40+ members across nationalities and majors: BBA (International Business, Finance, Marketing, Business Economics), B.Sc. (Food Science, Biological Sciences, Computer Science, Computer Engineering, Applied Mathematics, …), B.M. (Travel & Service Business Entrepreneurship), and B.F.A. (Media & Communication) | Interdisciplinarity is a selling point. Name the disciplines on a team; don't hide them. |
 | **Scope** | Case consulting competitions, hackathons, social ventures, CFA research challenges; weekly up-skilling sessions during terms | MCC is broader than "business cases." Scale your wording to the event. |
+
+Recurring self-descriptions in the club's own copy (Verified): *"led by the leading-mind students of the prestigious Mahidol University International College," "building professional youths through different competitions to become high caliber leaders," "train our members to compete in and host business case competitions."*
 
 ### The identity in one sentence (Standard)
 > *MUIC Case Club is Mahidol University International College's interdisciplinary, student-led consultancy club. Since 2018, it has trained members to compete in and organize business case competitions, including the HSBC Thailand Business Case Competition.*
@@ -61,16 +64,34 @@ Public coverage names the executive roles for each cohort:
 - Cohorts are labeled by year (e.g., **"MCC2022"**). Use this format to name a board ("MCC2026 Executive Board").
 - In official write-ups, leaders are introduced as **Full Name – Role**, with the President listed first.
 
-### 2.2 The annual rhythm (Verified, with the pattern generalized)
+Other recurring roles (Verified):
+- **Faculty advisor:** Assoc. Prof. Dr. Onnida Thongpravati advised MCC's team at the Asian Business Case Competition 2023 and judged Rookie's Rumble 2024.
+- **Alumni as judges:** former presidents, co-heads, and past winners come back to judge. For example, Khun Yanisa Sirisomboonchok, a member of the 2023 HSBC-winning team, judged the Rookie's Rumble 2024 final. This alumni-return loop is part of the club's "legacy" culture.
+
+### 2.2 The competition portfolio (Verified)
+MCC runs **three competitions of its own**, forming a ladder from first-years to national level:
+
+| Competition | Level | Audience | Format | Notes |
+|---|---|---|---|---|
+| **Rookie's Rumble** (2023, 2024, …) | Entry | MUIC freshmen and sophomores | Case released to teams in divisions (A–D); 48-hour turnaround (2024) covering *"situational analysis, marketing strategies and financial implications"*; division winners present to a final panel | Cases: P&G China (2023), Oppo (2024). Divisional judges are MUIC faculty; the final panel mixes faculty and alumni. Pitched as *"the first opportunity … to step in and experience the consultancy world."* |
+| **Legacy by MCC → Legacy by MUIC** | Internal (2021) → **National** (2024) | 2021: all MUIC undergraduates (28 teams, 112 participants). 2024: 20 teams from universities across Thailand | 2021: three rounds (3-day case, then a 24-hour semi-final case, then a final) | 2021 was sponsored by Accenture Thailand, with 11 judges from Accenture, Deloitte, KBank, and MUIC faculty. In 2024 it was renamed *Legacy by MUIC*, *"a national case competition trademarked by MUIC's Business Administration Division,"* with sponsors Evme, SCGJWD Logistics, APM, and Salad Factory. |
+| **HSBC Thailand Business Case Competition** | National flagship, by invitation | Thailand's leading business schools | See the annual rhythm below | The winner represents Thailand at the HSBC/HKU Asia Pacific competition |
+
+MCC teams also compete externally, for example in the Thammasat Undergraduate Business Challenge (2022: *4 Forces Consulting*, semi-finalist), the Asian Business Case Competition at NTU Singapore (2023), and the Chulalongkorn International Business Case Competition.
+
+### 2.3 The annual rhythm (Verified, with the pattern generalized)
 The HSBC Thailand Business Case Competition is the club's flagship. MCC organizes it in partnership with HSBC, and entry is by invitation to Thailand's leading business schools. The year is built around it:
 
 ```
 Term start ──► Weekly up-skilling sessions (e.g., Tuesdays, Jan–Mar)
          │
+         ├─► Rookie's Rumble            (Oct; onboard first- and second-years)
+         ├─► Legacy by MUIC             (e.g., Feb 3, 2024; national)
          ├─► Industry workshops         (e.g., "Pathway to Consulting Insight from BCG", Jan 22, 2026, 105 attendees)
          ├─► HSBC Volunteerism Program  (recruit volunteers to run the event)
          ├─► HSBC Internal Round        (select MUIC's representative teams)
-         ├─► HSBC Training & Networking Session / On-Tour Session (brief competitors across universities)
+         ├─► HSBC Open House / Training & Networking / On-Tour Session (brief competitors across universities)
+         ├─► HSBC Judges Briefing Session
          │
          ├─► Preliminary rounds         (2025: 20 teams, Divisions A–E, ~30 judges drawn from industry, faculty, and students)
          └─► Final round                (HSBC Lumpini Head Office; 3-hour case, no internet;
@@ -78,17 +99,52 @@ Term start ──► Weekly up-skilling sessions (e.g., Tuesdays, Jan–Mar)
                                           winner represents Thailand at the HSBC/HKU Asia Pacific competition)
 ```
 
-### 2.3 Track record (Verified; use it for credibility)
+### 2.4 Track record (Verified; use it for credibility)
 | Year | Result |
 |---|---|
-| 2022 | MCC hosted HSBC 2022; **Raven Consulting** (MUIC) won 1st Runner-up. An MCC team was a finalist at Thammasat's **Challenger 2022**. |
-| 2023 | **Excelsior Consulting** (MUIC) won HSBC 2023 (Narinya Yingcharoenthana, Aileen Liu, Yanisa Sirisomboonchok, Peerawat Mongkolnimit). |
+| 2022 | MCC hosted HSBC 2022; **Raven Consulting** (MUIC) won 1st Runner-up. An MCC team was a finalist at Thammasat's **Challenger 2022**, and **4 Forces Consulting** was a TUBC 2022 semi-finalist. |
+| 2023 | **Excelsior Consulting** (MUIC) won HSBC 2023 (Narinya Yingcharoenthana, Aileen Liu, Yanisa Sirisomboonchok, Peerawat Mongkolnimit). MCC competed at the ABCC in Singapore. |
 | 2025 | **Casa Consulting** (MUIC) won 2nd Runner-up. **Pinnacle Partners** (Chulalongkorn) won. |
 
-**Team-naming convention:** competing teams take firm-style names: *[Name] Consulting* or *[Name] Partners*. Follow it.
+**Team-naming convention:** competing teams take firm-style names: *[Name] Consulting*, *[Name] Partners*, or a two-word firm-style name (HSBC 2026 finalists included *Chloros Catalyst*, *Vermillion Vanguard*, and *Prosper Consulting*). Follow it. The alliterative, firm-like names read as the most professional. Internal rookie events allow playful names ("No Mayonnaise Please"), but external competitions don't.
 
-### 2.4 Contact block (Verified)
-Email **muic.caseclub@gmail.com** · Facebook **facebook.com/muic.caseclub** · Instagram · LinkedIn (**MUIC Case Club**) · TikTok · YouTube
+### 2.5 Contact block (Verified)
+Email **muic.caseclub@gmail.com** · Facebook **facebook.com/muic.caseclub** · Instagram **@muiccaseclub** · LinkedIn **MUIC Case Club** · TikTok **@muiccaseclub** · YouTube **@muiccaseclub2979** · LINE Open Chat **MUIC Case Club**
+Legacy channels: Facebook **Legacy by MUIC** (facebook.com/Legacybymcc) · Instagram **@legacybymcc**
+
+---
+
+## 2A. Social Media Audit (checked September 2026)
+
+### 2A.1 Channel by channel
+| Channel | Handle | Audience | Role in the mix | What it shows |
+|---|---|---|---|---|
+| **Instagram** | @muiccaseclub | ~2.1K followers, ~790 posts *(from a search-engine snapshot; the live profile is behind a login wall and couldn't be read)* | **Main channel and archive.** Members, prospective members, other universities' competitors | Bio centers on *"Home of Leading Minds"*, *Legacy by MUIC*, *Since 2018*, *Mahidol University, Thailand* |
+| **LinkedIn** | MUIC Case Club | ~745 followers | **Professional face.** Partners, recruiters, alumni | Full mission, vision, and values; long-form round-by-round recaps with bolded thanks, 🔹/🔸 sign-off, and a hashtag cluster |
+| **YouTube** | @muiccaseclub2979 | 109 subscribers, 13 videos | **Learning library.** Recorded final rounds, briefings, promos | Top videos: HSBC 2023 Final Round (~4.5K views), HSBC 2024 Final Round (~3.9K views) |
+| **TikTok** | @muiccaseclub | 71 followers, 910 likes | **Short-form reach.** Currently underused | Bio: `Since 2018 / 📚Home of Leading Minds / 📍Mahidol University, Thailand / #muiccaseclub #mcc` |
+| **Facebook** | facebook.com/muic.caseclub | Behind a login wall and not checked | Event announcements, Thai-speaking audience, parents and faculty | — |
+| **LINE Open Chat** | MUIC Case Club | — | Operational announcements to members and competitors | — |
+
+### 2A.2 Conventions the channels share (Verified)
+- **Bio formula:** `Since 2018` → `📚 Home of Leading Minds` → `📍 Mahidol University, Thailand` → hashtags. The emoji work as **labels** (📚 identity, 📍 place), which is the same "emoji as structure" rule used in LinkedIn posts.
+- **Hashtags:** `#muiccaseclub` is always present. `#mcc` is the short form. Posts add `#muic #mahidoluniversity #homeofleadingminds`, plus an event tag.
+- **YouTube title format:** `[Team]: [Segment] | [Full Event Name] [Year]` or `[Segment] | [Full Event Name] [Year]`
+  - *"Pinnacle Partners: Final Round Presentation | HSBC Thailand Business Case Competition 2026"*
+  - *"Open House Session | HSBC Thailand Business Case Competition 2024"*
+  - *"Onboarding Day | Legacy by MUIC 2024"*
+  - *"Promotional Video | Rookie's Rumble 2023 by MUIC Case Club"*
+  - One outlier, *"[HSBC'24] Judges Briefing Session"*, breaks the pattern. The pipe format is the standard.
+
+### 2A.3 Inconsistencies to fix (the audit's findings)
+| Issue | Where | Recommendation |
+|---|---|---|
+| **Handle mismatch:** YouTube uses the auto-generated `@muiccaseclub2979` while every other channel uses `@muiccaseclub` | YouTube | Claim `@muiccaseclub` if it's available, so the handle is identical across channels |
+| **Two versions of the mission and vision** (the YouTube "About" text is older and longer) | YouTube vs LinkedIn | Update the YouTube description to the LinkedIn wording, and add the values (Bright · Respectful · Supportive) and both slogans |
+| **Legacy naming:** the YouTube description still says *"LegacybyMCC"*; since 2024 the name is *Legacy by MUIC*, while the handles are still `legacybymcc` | YouTube, Legacy channels | Use **Legacy by MUIC** in all copy; keep the old handles for continuity but update the display names and bios |
+| **Title-format outlier** `[HSBC'24] …` | YouTube | Rename it to *"Judges Briefing Session \| HSBC Thailand Business Case Competition 2024"* |
+| **TikTok is under-leveraged** (71 followers vs ~2.1K on Instagram) | TikTok | Cross-post Instagram Reels, and cut 30–60s clips from the final-round videos (e.g., "The one slide that won HSBC 2023") |
+| **Final-round videos lack context** | YouTube | Add to each description: case sponsor, result, team members' names and majors, the hashtags, and a link to the recap post |
 
 ---
 
@@ -114,7 +170,7 @@ Observed LinkedIn post anatomy (Verified):
 2. **Event narrative organized by round or phase**
 3. **A gratitude section** that thanks the partner (HSBC Thailand) and the judges, often in **bold**
 4. **A sign-off tagline** between emoji dividers (🔹 / 🔸)
-5. **A hashtag cluster:** `#muiccaseclub #muic #mahidoluniversity #homeofleadingminds` plus an event tag (e.g., `#hsbcthailandbusinesscasecompetition2026`)
+5. **A hashtag cluster:** `#muiccaseclub #muic #mahidoluniversity #homeofleadingminds` (short form `#mcc`) plus an event tag (e.g., `#hsbcthailandbusinesscasecompetition2026`)
 6. **A social media directory** (Instagram · TikTok · Facebook · LinkedIn)
 
 Tone: *professional yet approachable, community-first, aspirational.* Emoji serve as **structure markers**, not decoration. Use no more than one per line, and never inside a sentence.
@@ -237,7 +293,8 @@ The HSBC final is a **three-hour case with no internet**, so the standard shifts
 |---|---|
 | Club name | **MUIC Case Club** in full on first mention, then **MCC** |
 | College | **Mahidol University International College (MUIC)** on first mention |
-| Flagship | **HSBC Thailand Business Case Competition [Year]** (write the full name on first mention) |
+| Flagship | **HSBC Thailand Business Case Competition [Year]** (write the full name on first mention; **HSBC'[YY]** only in informal internal shorthand) |
+| Club competitions | **Legacy by MUIC [Year]** (not "Legacy by MCC" from 2024 on) · **Rookie's Rumble [Year]** |
 | Dates (English, formal) | **Month D, YYYY** (e.g., *May 3, 2025*). Never *3/5/25*. |
 | Times | **9:00 AM – 12:30 PM** (with an en dash) |
 | Rankings | **Winner, 1st Runner-up, 2nd Runner-up, 3rd Runner-up** |
@@ -314,5 +371,12 @@ The HSBC final is a **three-hour case with no internet**, so the standard shifts
 - MUIC News: [MUIC Hosts Thailand Business Case Competition (On-Tour Session, 2022)](https://muic.mahidol.ac.th/en/news/muic-hosts-thailand-business-case-competition/)
 - MUIC News: [Insights from Professional Consultants in Case Club Workshop (BCG, 2026)](https://muic.mahidol.ac.th/en/news/insights-from-professional-consultants-in-case-club-workshop/)
 - [MUIC Case Club on LinkedIn](https://www.linkedin.com/company/muic-case-club/) (mission, vision, values, post format)
+- [MUIC Case Club on YouTube](https://www.youtube.com/@muiccaseclub2979) (About text, video-title conventions, view counts)
+- [MUIC Case Club on TikTok](https://www.tiktok.com/@muiccaseclub) (bio, audience)
+- [MUIC Case Club on Instagram](https://www.instagram.com/muiccaseclub/) (bio and counts from a search-engine snapshot; the live page needs a login)
+- MUIC News: [Case Club Successfully Hosts "Legacy by MCC 2021"](https://muic.mahidol.ac.th/eng/case-club-successfully-hosts-legacy-by-mcc-2021/)
+- MUIC News: [MUIC's First Ever National Business Case Competition (Legacy by MUIC 2024)](https://muic.mahidol.ac.th/eng/muics-first-ever-national-business-case-competition-highlights-innovation-and-talent/)
+- MUIC News: [2023 Rookie's Rumble](https://muic.mahidol.ac.th/eng/2023-rookies-rumble-shaping-future-leaders-of-muic-case-club/) and [Rookie's Rumble 2024](https://muic.mahidol.ac.th/eng/muic-case-club-stages-rookies-rumble-2024/)
+- MUIC News: [MUIC Team Competes in Asian Business Case Competition in Singapore](https://muic.mahidol.ac.th/en/news/muic-team-competes-in-asian-business-case-tilt-in-singapore/) and [MUIC Team is Semi-finalist in Business Case Contest (TUBC 2022)](https://muic.mahidol.ac.th/en/news/muic-team-is-semi-finalist-in-business-case-contest/)
 - MUIC BUSA 101 Business Communication: *Sample Writing Reference* (AIDA, 7Cs, bad-news structure, formatting)
 - CA-ASE Case Competition 2026: *Welcoming Package* (judging criteria and submission conventions, used as a benchmark)

@@ -207,3 +207,40 @@ Attendees: [Names]  ·  Apologies: [Names]
 
 Next meeting: [Month D, YYYY], [Time], [Venue]
 ```
+
+---
+
+## 10. Social Bio (all channels)
+
+Use the same bio everywhere so the brand reads as one club. This version extends the current TikTok bio.
+
+```
+MUIC Case Club | Since 2018
+📚 Home of Leading Minds
+🏆 HSBC Thailand Business Case Competition · Legacy by MUIC · Rookie's Rumble
+📍 Mahidol University International College, Thailand
+✉️ muic.caseclub@gmail.com
+#muiccaseclub #mcc
+```
+
+---
+
+## 11. YouTube Title & Description
+
+**Title:** `[Team]: [Segment] | [Full Event Name] [Year]` or `[Segment] | [Full Event Name] [Year]`
+
+```
+[Team Name] ([University]) presents its Final Round solution at the [Full Event Name] [Year], held on [Month D, YYYY] at [Venue].
+
+📌 Case: [Client / topic]
+🏆 Result: [Winner / 1st Runner-up / Finalist]
+👥 Team: [Name] ([Major]) · [Name] ([Major]) · [Name] ([Major]) · [Name] ([Major])
+
+Organized by MUIC Case Club in partnership with [Partner].
+Special thanks to our esteemed judges, faculty advisors, organizing committee, and volunteers.
+
+🔹 Train. Gain. Compete. Network. 🔸
+Instagram @muiccaseclub · LinkedIn MUIC Case Club · Facebook MUIC Case Club · ✉️ muic.caseclub@gmail.com
+
+#muiccaseclub #mcc #muic #mahidoluniversity #homeofleadingminds #[eventhashtag][year]
+```
